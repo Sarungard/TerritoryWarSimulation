@@ -91,6 +91,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)\Logic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,12 +148,17 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Logic\Circle.h" />
     <ClInclude Include="Logic\Collision.h" />
     <ClInclude Include="Logic\Interactable.h" />
     <ClInclude Include="Logic\Shape.h" />
     <ClInclude Include="Logic\Speed.h" />
+    <ClInclude Include="Logic\Square.h" />
     <ClInclude Include="Logic\Vector2.h" />
     <ClInclude Include="Logic\World.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Circle.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

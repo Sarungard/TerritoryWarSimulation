@@ -1,12 +1,14 @@
 #include <iostream>
 #include <SDL.h>
+#include <SDL_image.h>
 #include <Speed.h>
+#include <World.h>
 
-SDL_Rect dest;
 Uint32 render_flags;
 SDL_Window* win;
 SDL_Renderer* rend;
 Speed speed;
+World* world;
 
 void initWindow();
 
@@ -30,27 +32,15 @@ int main(int argc, char* argv[])
             case SDL_KEYDOWN:
                 // keyboard API for key pressed
                 switch (event.key.keysym.scancode) {
-                case SDL_SCANCODE_W:
-                case SDL_SCANCODE_UP:
-                    dest.y -= speed / 30;
-                    break;
-                case SDL_SCANCODE_A:
-                case SDL_SCANCODE_LEFT:
-                    dest.x -= speed / 30;
-                    break;
-                case SDL_SCANCODE_S:
-                case SDL_SCANCODE_DOWN:
-                    dest.y += speed / 30;
-                    break;
-                case SDL_SCANCODE_D:
-                case SDL_SCANCODE_RIGHT:
-                    dest.x += speed / 30;
-                    break;
                 case SDL_SCANCODE_KP_PLUS:
                     speed += 90;
                     break;
                 case SDL_SCANCODE_KP_MINUS:
                     speed -= 90;
+                    break;
+                case SDL_SCANCODE_SPACE:
+                    //Spawn a 'ball'
+                    std::cout << "smth" << std::endl;
                     break;
                 case SDL_SCANCODE_ESCAPE:
                     SDL_Quit();
@@ -60,7 +50,7 @@ int main(int argc, char* argv[])
                 }
             }
         }
-
+        /*
         // right boundary
         if (dest.x + dest.w > 400)
             dest.x = 400 - dest.w;
@@ -76,7 +66,7 @@ int main(int argc, char* argv[])
         // upper boundary
         if (dest.y < 0)
             dest.y = 0;
-
+        */
         // clears the screen
         SDL_RenderClear(rend);
 
@@ -106,16 +96,17 @@ void initWindow()
     {
         printf("error initalizing SDL: %s\n", SDL_GetError());
     }
-    win = SDL_CreateWindow("Territory War", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, 0);
+    win = SDL_CreateWindow("Territory War", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 800, 0);
     render_flags = SDL_RENDERER_ACCELERATED;
-    rend = SDL_CreateRenderer(win, -1, render_flags);
-    SDL_SetRenderDrawColor(rend, 255, 0, 0, 255);
+    rend = SDL_CreateRenderer(win, -1, render_flags);    
     SDL_RenderClear(rend);
+    SDL_Rect dest;
     dest.w = 50;
     dest.h = 50;
-    dest.x = (400 - dest.w) / 2;
-    dest.y = (400 - dest.h) / 2;
-    SDL_SetRenderDrawColor(rend, 0, 0, 255, 255);
-    SDL_RenderFillRect(rend, &dest);
+    dest.x = 400 - dest.w / 2;
+    dest.y = 400 - dest.h / 2;
+    SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
     SDL_RenderPresent(rend);
+
+    world = new World(rend);
 }

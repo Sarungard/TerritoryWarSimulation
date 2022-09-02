@@ -2,7 +2,7 @@
 #include <Vector2.h>
 #include <Shape.h>
 
-class Collision
+struct Collision
 {
 public:
 	Shape shapeA;
@@ -10,6 +10,15 @@ public:
 	float distance;
 	Vector2 vector;
 	Vector2 separation;
+
+	Collision(Shape sa, Shape sb, float d, float tr, Vector2 v)
+	{
+		shapeA = sa;
+		shapeB = sb;
+		distance = d;
+		vector = v;
+		separation = Vector2(vector.X * tr - d, vector.Y * tr - d);
+	}
 };
 
 struct CollisionPoints

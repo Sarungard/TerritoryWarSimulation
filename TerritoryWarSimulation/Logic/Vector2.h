@@ -2,8 +2,8 @@
 #include <math.h>
 struct Vector2
 {
-	double X, Y;
-	inline Vector2(void) {}
+	float X, Y;
+	inline Vector2(void) { X = 0; Y = 0; }
 	inline Vector2(const float x, const float y)
 	{
 		X = x;
@@ -32,16 +32,21 @@ struct Vector2
 
 	inline Vector2& operator += (const Vector2& A) 
 	{
-		this->X = A.X;
-		this->Y = A.X;
+		this->X += A.X;
+		this->Y += A.X;
 		return *this;
 	}
 
 	inline Vector2& operator += (const float A)
 	{
-		this->X = A;
-		this->Y = A;
+		this->X += A;
+		this->Y += A;
 		return *this;
+	}
+
+	inline bool operator == (const Vector2& A)
+	{
+		return this->X == A.X && this->Y == A.Y;
 	}
 
 	inline bool operator > (const Vector2& A)
@@ -59,7 +64,7 @@ struct Vector2
 		return this->Length() < A.Length();
 	}
 
-	inline bool operator < (const Vector2& A)
+	inline bool operator <= (const Vector2& A)
 	{
 		return this->Length() <= A.Length();
 	}

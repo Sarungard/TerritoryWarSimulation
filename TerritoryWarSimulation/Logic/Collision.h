@@ -20,7 +20,7 @@ public:
 		separation = Vector2(vector.X * tr - d, vector.Y * tr - d);
 	}
 };
-
+/*
 struct CollisionPoints
 {
 	Vector2 A;
@@ -42,3 +42,4 @@ struct ContactManifold
 	ContactPoint Points[2];
 	Vector2 Normal;
 };
+*/

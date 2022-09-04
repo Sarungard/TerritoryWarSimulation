@@ -33,7 +33,7 @@ struct Vector2
 	inline Vector2& operator += (const Vector2& A) 
 	{
 		this->X += A.X;
-		this->Y += A.X;
+		this->Y += A.Y;
 		return *this;
 	}
 

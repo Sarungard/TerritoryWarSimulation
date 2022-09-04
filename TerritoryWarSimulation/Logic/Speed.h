@@ -1,6 +1,6 @@
 class Speed
 {
-    int speed;
+    float speed;
 
 public:
     Speed()
@@ -8,7 +8,7 @@ public:
         speed = 300;
     }
 
-    Speed(int value)
+    Speed(float value)
     {
         if (value < 0)
         {
@@ -20,12 +20,12 @@ public:
         }
     }
 
-    int getSpeed()
+    float getSpeed()
     {
         return speed;
     }
 
-    void setSpeed(int value)
+    void setSpeed(float value)
     {
         if (value >= 0)
         {
@@ -33,12 +33,12 @@ public:
         }
     }
 
-    friend int operator/(const Speed& a, const int& b)
+    friend int operator/(const Speed& a, const float& b)
     {
         return a.speed / b;
     }
 
-    friend void operator+=(Speed& a, const int& b)
+    friend void operator+=(Speed& a, const float& b)
     {
         if (a.speed + b > 3000)
         {
@@ -50,7 +50,7 @@ public:
         }
     }
 
-    friend void operator-=(Speed& a, const int& b)
+    friend void operator-=(Speed& a, const float& b)
     {
         if (a.speed - b < 0)
         {

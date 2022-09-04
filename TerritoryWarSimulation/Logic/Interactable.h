@@ -1,6 +1,9 @@
 #pragma once
 #include <Vector2.h>
 #include <Shape.h>
+#include <Circle.h>
+#include <Square.h>
+#include <Controller.h>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <string>
@@ -8,38 +11,62 @@
 class Interactable
 {
 public:
-	Vector2 Position;
-	Vector2 Velocity;
-	Shape Shape;
-
-	Interactable(SDL_Renderer* rend, int id)
+	Interactable(SDL_Renderer* rend, int id, Controller controller, int form)
 	{
 		_id = id;
-		SDL_Surface* surface = NULL;
-		surface = IMG_Load("test.jpg");
-		std::cout << IMG_GetError() << std::endl << SDL_GetError() << std::endl;
-		//_texture = IMG_LoadTexture(rend,"D:\\_Gamer1_adatai\\Desktop\\Projects\\Szakdolgozat\\Simulation\\TerritoryWarSimulation\\Debug\\test.jpg");
-		_texture = SDL_CreateTextureFromSurface(rend, surface);
-		_destination.w = 40;
-		_destination.h = 40;
-		_destination.x = 400;
-		_destination.y = 400;
-		SDL_FreeSurface(surface);
-		SDL_QueryTexture(_texture, NULL, NULL, &_destination.w, &_destination.h);
-		SDL_RenderPresent(rend);
+
+		_position = Vector2(200+rand() % (controller.GetID()+1) + _id, 200 + rand() % (controller.GetID() + 1) + _id);
+		_velocity = Vector2(9, 11);
+		_controller = controller;
+		if (form == 1)
+		{
+			_shape = new Circle(rend, _position, 20, _controller.GetColor());
+		}
+		else
+		{
+			_shape = new Square(_position, 20);
+		}
+		_shape->Render(rend, _position);
 	}
 
 	~Interactable()
 	{
-		SDL_DestroyTexture(_texture);
+		
 	}
 
-	void Render(SDL_Renderer* rend)
-	{
-		_destination.x = Position.X;
-		_destination.y = Position.Y;
 
-		SDL_RenderCopy(rend, _texture, NULL, &_destination);
+	void Step(SDL_Renderer* rend)
+	{
+		_position += _velocity;
+		// right boundary
+		if (_position.X + 20 >= 800)
+		{
+			_position.X = 780;
+			_velocity = Vector2(-1 * (_velocity.X + rand() % 10 - 5), _velocity.Y);
+		}
+
+		// left boundary
+		if (_position.X - 20 <= 0)
+		{
+			_position.X = 20;
+			_velocity = Vector2(-1 * (_velocity.X + rand() % 10 - 5), _velocity.Y);
+		}
+
+		// bottom boundary
+		if (_position.Y + 20 >= 800)
+		{
+			_position.Y = 780;
+			_velocity = Vector2(_velocity.X, -1 * (_velocity.Y + rand() % 10 - 5));
+		}
+
+		// upper boundary
+		if (_position.Y - 20 <= 0)
+		{
+			_position.Y = 20;
+			_velocity = Vector2(_velocity.X, -1 * (_velocity.Y + rand() % 10 - 5));
+		}
+		std::cout << _id << ": (" << _position.X << "," << _position.Y << ")" << std::endl;
+		_shape->Render(rend, _position);
 	}
 
 	int GetID() const
@@ -47,12 +74,19 @@ public:
 		return _id;
 	}
 
+	Shape* GetShape() const
+	{
+		return _shape;
+	}
+
 	friend bool operator == (const Interactable& A, const Interactable& B);
 
 private:
-	SDL_Rect _destination;
-	SDL_Texture* _texture;
 	int _id;
+	Vector2 _position;
+	Vector2 _velocity;
+	Shape* _shape;
+	Controller _controller;
 };
 
 bool operator == (const Interactable& A, const Interactable& B)
@@ -62,7 +96,7 @@ bool operator == (const Interactable& A, const Interactable& B)
 
 struct Transform
 {
-	Vector2 Position;
+	Vector2 _position;
 	Vector2 Scale;
 	float Rotation;
 };

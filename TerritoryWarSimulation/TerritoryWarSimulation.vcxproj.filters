@@ -44,6 +44,15 @@
     <ClInclude Include="Logic\Square.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Logic\Controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Logic\Form.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Logic\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Circle.png">

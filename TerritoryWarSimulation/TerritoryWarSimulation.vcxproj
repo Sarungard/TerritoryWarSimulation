@@ -170,6 +170,11 @@
   <ItemGroup>
     <Image Include="Circle.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="Resources\x64\Lib\SDL2.lib" />
+    <Library Include="Resources\x64\Lib\SDL2main.lib" />
+    <Library Include="Resources\x64\Lib\SDL2_image.lib" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

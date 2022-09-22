@@ -2,11 +2,11 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <World.h>
+#include <time.h>
 
 SDL_Window* win;
 SDL_Renderer* rend;
 Uint32 render_flags;
-Speed speed;
 World world;
 int fps_curr;
 int sec;
@@ -24,11 +24,10 @@ int main(int argc, char* argv[])
         SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
         IMG_Init(IMG_INIT_PNG);
         world = World(rend);
-        speed = Speed(20);
 
         int close = 0;
         while (!close) {
-            fps_curr = world.Tick(speed, fps_curr);
+            fps_curr = world.Tick(fps_curr);
             if (fps_curr == fps_set)
             {
                 sec++;
@@ -49,11 +48,9 @@ int main(int argc, char* argv[])
                     switch (event.key.keysym.scancode) {
                     case SDL_SCANCODE_KP_PLUS:
                     case SDL_SCANCODE_UP:
-                        speed += 3;
                         break;
                     case SDL_SCANCODE_KP_MINUS:
                     case SDL_SCANCODE_DOWN:
-                        speed -= 3;
                         break;
                     case SDL_SCANCODE_SPACE:
                         //Spawn a 'ball'

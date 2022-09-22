@@ -130,8 +130,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>SDL2.lib SDL2main.lib SDL2_image.lib %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,15 +155,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Logic\Circle.h" />
     <ClInclude Include="Logic\Collision.h" />
     <ClInclude Include="Logic\Color.h" />
     <ClInclude Include="Logic\Controller.h" />
     <ClInclude Include="Logic\Form.h" />
     <ClInclude Include="Logic\Interactable.h" />
-    <ClInclude Include="Logic\Shape.h" />
-    <ClInclude Include="Logic\Speed.h" />
-    <ClInclude Include="Logic\Square.h" />
     <ClInclude Include="Logic\Vector2.h" />
     <ClInclude Include="Logic\World.h" />
   </ItemGroup>

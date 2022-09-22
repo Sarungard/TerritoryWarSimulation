@@ -10,6 +10,20 @@ struct Vector2
 		Y = y;
 	}
 
+	void Rotate()
+	{
+		if (X >= 0)
+		{
+			if (Y >= 0) { Y *= -1; }
+			else { X *= -1; }
+		}
+		else
+		{
+			if( Y >= 0) { X *= -1; }
+			else{ Y *= -1; }
+		}
+	}
+
 	inline Vector2 operator + (const Vector2& A) const
 	{
 		return Vector2(X + A.X, Y + A.Y);
@@ -41,6 +55,20 @@ struct Vector2
 	{
 		this->X += A;
 		this->Y += A;
+		return *this;
+	}
+
+	inline Vector2& operator -= (const Vector2& A)
+	{
+		this->X -= A.X;
+		this->Y -= A.Y;
+		return *this;
+	}
+
+	inline Vector2& operator -= (const float A)
+	{
+		this->X -= A;
+		this->Y -= A;
 		return *this;
 	}
 

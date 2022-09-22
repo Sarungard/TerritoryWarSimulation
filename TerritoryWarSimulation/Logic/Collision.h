@@ -1,25 +1,28 @@
-#pragma once
-#include <Vector2.h>
-#include <Shape.h>
+#ifndef includeCollision
+#define includeCollision
 
-struct Collision
+class Collision
 {
-public:
-	Shape shapeA;
-	Shape shapeB;
-	float distance;
-	Vector2 vector;
-	Vector2 separation;
 
-	Collision(Shape sa, Shape sb, float d, float tr, Vector2 v)
+public:
+
+	float _distance;
+	Vector2 _vector;
+	Vector2 _separation;
+
+	Collision()
 	{
-		shapeA = sa;
-		shapeB = sb;
-		distance = d;
-		vector = v;
-		separation = Vector2(vector.X * tr - d, vector.Y * tr - d);
+
+	}
+
+	Collision(float d, float tr, Vector2 v)
+	{
+		_distance = d;
+		_vector = v;
+		_separation = Vector2(_vector.X * tr - d, _vector.Y * tr - d);
 	}
 };
+#endif // !includeCollision
 /*
 struct CollisionPoints
 {

@@ -20,28 +20,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Logic\Speed.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Logic\Vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logic\Interactable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Logic\Shape.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Logic\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logic\Collision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Logic\Circle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Logic\Square.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logic\Controller.h">

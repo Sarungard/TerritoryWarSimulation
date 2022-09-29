@@ -2,9 +2,10 @@
 #include <vector>
 #include <Vector2.h>
 #include <Interactable.h>
-#include <Speed.h>
 #include <Form.h>
 #include <Controller.h>
+#include <Collision.h>
+#include <math.h>
 
 class World
 {
@@ -15,6 +16,17 @@ private:
 	SDL_Renderer* _rend;
 	int _id;
 	int _cid;
+	Color _colors[9] = {
+		{128, 128, 128},
+		{255, 0, 0},
+		{0, 255, 0},
+		{0, 0, 255},
+		{255, 255, 0},
+		{255, 0, 255},
+		{0, 255, 255},
+		{128, 0, 128},
+		{0, 128, 128}
+	};
 
 public:
 
@@ -32,14 +44,21 @@ public:
 		SDL_SetRenderDrawColor(_rend, 0, 0, 0, 255);
 		for (int i = 0; i <= _cid; ++i)
 		{
-			Controller* obj = new Controller(i, Color(15 + i * 25, 15 + i * 25, 15 + i * 25));
+			Controller* obj = new Controller(i, _colors[i]);
 			std::reference_wrapper<Controller> cont = *obj;
 			controllers.push_back(cont);
+		}
+		for (int i = 0; i < 40; ++i)
+		{
+			for (int j = 0; j < 40; ++j)
+			{
+				AddStaticObject(new Interactable(_rend, ++_id, Vector2(i * 20, j * 20), controllers.front(), square, 20));
+			}
 		}
 		for (Controller& obj : controllers)
 		{
 			if (obj.GetID() != 0)
-			AddDynamicObject(new Interactable(_rend, ++_id, obj, circle));
+			AddDynamicObject(new Interactable(_rend, ++_id, Vector2(obj.GetID() * 71, obj.GetID() * 11), obj, circle, 10));
 		}
 	}	
 
@@ -62,7 +81,35 @@ public:
 		dynamicWorldObjects.erase(itr);
 	}
 
-	float Tick(Speed dt, float fps)
+	void CheckForCollisions(Interactable& obj)
+	{
+		Collision* c = new Collision;
+		for (Interactable& _obj : staticWorldObjects)
+		{
+			if (obj.Intersects(_obj, c))
+			{
+				obj.SolveCollision(*c);
+				c = nullptr;
+				delete c;
+				return;
+			}
+		}
+		for (Interactable& _obj : dynamicWorldObjects)
+		{
+			if (obj != _obj)
+			{				
+				if (obj.Intersects(_obj, c))
+				{
+					obj.SolveCollision(*c);
+					c = nullptr;
+					delete c;
+					return;
+				}
+			}
+		}
+	}
+
+	float Tick(float fps)
 	{
 		//std::cout << "Tick" << fps << std::endl;
 		SDL_RenderClear(_rend);
@@ -70,9 +117,14 @@ public:
 		{
 			obj.GetShape().Render(_rend);
 		}*/
+		for (Interactable& obj : staticWorldObjects)
+		{
+			obj.Render();
+		}
 		for (Interactable& obj : dynamicWorldObjects)
 		{
 			obj.Step(_rend);
+			CheckForCollisions(obj);
 		}
 		SDL_RenderPresent(_rend);
 		return fps++;

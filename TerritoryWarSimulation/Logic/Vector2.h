@@ -34,6 +34,16 @@ struct Vector2
 		return Vector2(X + A, Y + A);
 	}
 
+	inline Vector2 operator - (const Vector2& A) const
+	{
+		return Vector2(X - A.X, Y - A.Y);
+	}
+
+	inline Vector2 operator - (const float A) const
+	{
+		return Vector2(X - A, Y - A);
+	}
+	
 	inline Vector2 operator * (const float A) const
 	{
 		return Vector2(X * A, Y * A);
@@ -72,6 +82,20 @@ struct Vector2
 		return *this;
 	}
 
+	inline Vector2& operator *= (const Vector2& A)
+	{
+		this->X *= A.X;
+		this->Y *= A.Y;
+		return *this;
+	}
+
+	inline Vector2& operator *= (const float A)
+	{
+		this->X *= A;
+		this->Y *= A;
+		return *this;
+	}
+
 	inline bool operator == (const Vector2& A)
 	{
 		return this->X == A.X && this->Y == A.Y;
@@ -99,7 +123,7 @@ struct Vector2
 
 	inline float Dot(const Vector2& A) const
 	{
-		return X * A.X + Y * A.Y;
+		return (X * A.X) + (Y * A.Y);
 	}
 
 	inline float Length() const

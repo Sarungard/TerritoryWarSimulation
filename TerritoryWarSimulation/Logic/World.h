@@ -17,7 +17,7 @@ private:
 	int _id;
 	int _cid;
 	Color _colors[9] = {
-		{128, 128, 128},
+		{100, 100, 100},
 		{255, 0, 0},
 		{0, 255, 0},
 		{0, 0, 255},
@@ -52,13 +52,18 @@ public:
 		{
 			for (int j = 0; j < 40; ++j)
 			{
+				if ((i * 20) % 100 == 0 && i == j)
+				{
+					std::cout << i << " ping " << j << std::endl;
+					AddStaticObject(new Interactable(_rend, ++_id, Vector2(i * 20, j * 20), controllers[i / 5 + 1], square, 20));
+				}
 				AddStaticObject(new Interactable(_rend, ++_id, Vector2(i * 20, j * 20), controllers.front(), square, 20));
 			}
 		}
 		for (Controller& obj : controllers)
 		{
 			if (obj.GetID() != 0)
-			AddDynamicObject(new Interactable(_rend, ++_id, Vector2(obj.GetID() * 71, obj.GetID() * 11), obj, circle, 10));
+			AddDynamicObject(new Interactable(_rend, ++_id, Vector2(obj.GetID() * 100, obj.GetID() * 100), obj, circle, 10));
 		}
 	}	
 
@@ -86,12 +91,16 @@ public:
 		Collision* c = new Collision;
 		for (Interactable& _obj : staticWorldObjects)
 		{
-			if (obj.Intersects(_obj, c))
+			if (obj.GetController().GetID() != _obj.GetController().GetID())
 			{
-				obj.SolveCollision(*c);
-				c = nullptr;
-				delete c;
-				return;
+				if (obj.Intersects(_obj, c))
+				{
+					_obj.ChangeController(obj.GetController());
+					obj.SolveCollision(*c);
+					c = nullptr;
+					delete c;
+					return;
+				}
 			}
 		}
 		for (Interactable& _obj : dynamicWorldObjects)

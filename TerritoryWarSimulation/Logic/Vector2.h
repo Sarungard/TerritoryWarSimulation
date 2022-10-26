@@ -1,5 +1,7 @@
 #pragma once
 #include <math.h>
+#include <string>
+
 struct Vector2
 {
 	float X, Y;
@@ -22,6 +24,11 @@ struct Vector2
 			if( Y >= 0) { X *= -1; }
 			else{ Y *= -1; }
 		}
+	}
+
+	std::string ToString() const
+	{
+		return "(" + std::to_string(X) + "," + std::to_string(Y) + ")";
 	}
 
 	inline Vector2 operator + (const Vector2& A) const

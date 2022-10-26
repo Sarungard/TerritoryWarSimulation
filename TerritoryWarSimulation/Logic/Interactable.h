@@ -51,28 +51,28 @@ public:
 		if (_position.X + 20 >= 800)
 		{
 			_position.X = 780;
-			_velocity = Vector2(-1 * (_velocity.X + rand() % 3 - 1), _velocity.Y);
+			_velocity = Vector2(-1 * _velocity.X, _velocity.Y);
 		}
 
 		// left boundary
 		if (_position.X - 20 <= 0)
 		{
 			_position.X = 20;
-			_velocity = Vector2(-1 * (_velocity.X + rand() % 3 - 1), _velocity.Y);
+			_velocity = Vector2(-1 * _velocity.X, _velocity.Y);
 		}
 
 		// bottom boundary
 		if (_position.Y + 20 >= 800)
 		{
 			_position.Y = 780;
-			_velocity = Vector2(_velocity.X, -1 * (_velocity.Y + rand() % 3 - 1));
+			_velocity = Vector2(_velocity.X, -1 * _velocity.Y);
 		}
 
 		// upper boundary
 		if (_position.Y - 20 <= 0)
 		{
 			_position.Y = 20;
-			_velocity = Vector2(_velocity.X, -1 * (_velocity.Y + rand() % 3 - 1));
+			_velocity = Vector2(_velocity.X, -1 * _velocity.Y);
 		}
 		//std::cout << _id << ": (" << _position.X << "," << _position.Y << ")" << std::endl;
 		Render();
@@ -206,7 +206,7 @@ private:
 			int32_t ty = 1;
 			int32_t error = (tx - diameter);
 
-			SDL_SetRenderDrawColor(_rend, _color.r, _color.g, _color.b, 255);
+			r == _radius ? SDL_SetRenderDrawColor(_rend, 0, 0, 0, 255) : SDL_SetRenderDrawColor(_rend, _color.r, _color.g, _color.b, 255);
 
 			while (x >= y)
 			{
@@ -238,7 +238,7 @@ private:
 		}
 		SDL_SetRenderDrawColor(_rend, 0, 0, 0, 255);
 	}
-
+	/*
 	bool _intersectsSquare(Interactable other, Collision* collision) const
 	{
 		float shortestDist = std::numeric_limits<float>::max();
@@ -248,7 +248,8 @@ private:
 
 		for (int i = 0; i < 4; ++i)
 		{
-			float dist = pow(this->_position.X - (other.GetPosition().X + verts[i].X), 2) + pow(this->_position.Y - (other.GetPosition().Y + verts[i].Y), 2);
+			//std::cout << verts[i].ToString();
+			float dist = sqrt(pow(this->_position.X - (other.GetPosition().X + verts[i].X), 2) + pow(this->_position.Y - (other.GetPosition().Y + verts[i].Y), 2));
 			if (dist < shortestDist)
 			{
 				shortestDist = dist;
@@ -326,6 +327,15 @@ private:
 		collision->_separation = Vector2(collision->_vector.X * collision->_distance/100000, collision->_vector.Y * collision->_distance/100000);
 		//std::cout << collision->_separation.Length() << std::endl;
 		
+		return true;
+	}
+	*/
+	bool _intersectsSquare(Interactable other, Collision* collision) const
+	{
+		const float tr = other._radius/2 + this->_radius;
+		const float d = sqrt(pow(this->_position.X - other._position.X, 2) + pow(this->_position.Y - other._position.Y, 2));
+		if (d > tr) return false;
+		collision = new Collision(d, tr, Vector2(this->_position.X - other._position.X, this->_position.Y - other._position.Y));
 		return true;
 	}
 

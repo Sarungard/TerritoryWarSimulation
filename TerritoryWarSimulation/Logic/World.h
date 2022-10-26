@@ -54,10 +54,15 @@ public:
 			{
 				if ((i * 20) % 100 == 0 && i == j)
 				{
-					std::cout << i << " ping " << j << std::endl;
 					AddStaticObject(new Interactable(_rend, ++_id, Vector2(i * 20, j * 20), controllers[i / 5 + 1], square, 20));
+					/*auto x = staticWorldObjects.back().get().GetVertices();
+					std::cout << "At position " << staticWorldObjects.back().get().GetPosition().ToString() << "the vertices are" << x[0].ToString() << x[1].ToString() << x[2].ToString() << x[3].ToString() << std::endl;
+					*/
 				}
-				AddStaticObject(new Interactable(_rend, ++_id, Vector2(i * 20, j * 20), controllers.front(), square, 20));
+				else
+				{
+					AddStaticObject(new Interactable(_rend, ++_id, Vector2(i * 20, j * 20), controllers.front(), square, 20));
+				}
 			}
 		}
 		for (Controller& obj : controllers)
@@ -93,6 +98,7 @@ public:
 		{
 			if (obj.GetController().GetID() != _obj.GetController().GetID())
 			{
+				//std::cout << obj.GetPosition().ToString() << " vs " << _obj.GetPosition().ToString() << std::endl;
 				if (obj.Intersects(_obj, c))
 				{
 					_obj.ChangeController(obj.GetController());
@@ -120,12 +126,10 @@ public:
 
 	float Tick(float fps)
 	{
+		
 		//std::cout << "Tick" << fps << std::endl;
+		
 		SDL_RenderClear(_rend);
-		/*for (Interactable& obj : staticWorldObjects)
-		{
-			obj.GetShape().Render(_rend);
-		}*/
 		for (Interactable& obj : staticWorldObjects)
 		{
 			obj.Render();
@@ -136,7 +140,8 @@ public:
 			CheckForCollisions(obj);
 		}
 		SDL_RenderPresent(_rend);
-		return fps++;
+		
+		return fps+1;
 	}
 };
 

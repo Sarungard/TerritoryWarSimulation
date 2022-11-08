@@ -3,11 +3,13 @@
 #include <SDL_image.h>
 #include <World.h>
 #include <time.h>
+#include <Layout.h>
 
 SDL_Window* win;
 SDL_Renderer* rend;
 Uint32 render_flags;
 World world;
+const Layout map = Layout("Map1.txt");
 int fps_curr;
 int sec;
 const int fps_set = 60;
@@ -23,7 +25,7 @@ int main(int argc, char* argv[])
         rend = SDL_CreateRenderer(win, -1, render_flags);
         SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
         IMG_Init(IMG_INIT_PNG);
-        world = World(rend);
+        world = World(rend, map);
 
         int close = 0;
         while (!close) {
@@ -31,6 +33,10 @@ int main(int argc, char* argv[])
             if (fps_curr == fps_set)
             {
                 sec++;
+                if (sec % 30 == 0)
+                {
+                    world.SpawnNewBalls();
+                }
                 fps_curr = 0;
                 std::cout << sec << " seconds have passed since running." << std::endl;
             }
@@ -53,8 +59,7 @@ int main(int argc, char* argv[])
                     case SDL_SCANCODE_DOWN:
                         break;
                     case SDL_SCANCODE_SPACE:
-                        //Spawn a 'ball'
-                        std::cout << "smth" << std::endl;
+                        world.SpawnNewBalls();
                         break;
                     case SDL_SCANCODE_ESCAPE:
                         SDL_Quit();
@@ -65,7 +70,7 @@ int main(int argc, char* argv[])
                 }
             }
             // calculates to 60 fps
-            SDL_Delay(800 / fps_set);
+            SDL_Delay(map.Height / fps_set);
         }
         IMG_Quit();
 
@@ -92,7 +97,7 @@ bool initWindow()
     }
     else
     {
-        win = SDL_CreateWindow("Territory Wars", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 800, SDL_WINDOW_SHOWN);
+        win = SDL_CreateWindow("Territory Wars", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, map.Height, map.Width, SDL_WINDOW_SHOWN);
         if (win == NULL)
         {
             printf("error initalizing SDL: %s\n", SDL_GetError());

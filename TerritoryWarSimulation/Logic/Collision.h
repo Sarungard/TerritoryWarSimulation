@@ -19,7 +19,7 @@ public:
 	{
 		_distance = d;
 		_vector = v;
-		_separation = Vector2(_vector.X * tr - d, _vector.Y * tr - d);
+		_separation = Vector2(_vector.X * (tr - d), _vector.Y * (tr - d));
 	}
 };
 #endif // !includeCollision

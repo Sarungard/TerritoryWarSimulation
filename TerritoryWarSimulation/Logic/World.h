@@ -6,6 +6,8 @@
 #include <Controller.h>
 #include <Collision.h>
 #include <math.h>
+#include <Layout.h>
+#include <algorithm>
 
 class World
 {
@@ -14,8 +16,9 @@ private:
 	std::vector<std::reference_wrapper<Interactable> > dynamicWorldObjects;
 	std::vector<std::reference_wrapper<Controller> > controllers;
 	SDL_Renderer* _rend;
+	Layout _layout;
 	int _id;
-	int _cid;
+
 	Color _colors[9] = {
 		{100, 100, 100},
 		{255, 0, 0},
@@ -28,6 +31,22 @@ private:
 		{0, 128, 128}
 	};
 
+	bool IsCore(int i, int j)
+	{
+		for (Core c : _layout.Cores)
+		{
+			for (Vector2 _c : c.Positions)
+			{
+				if (_c.X == i * 20 && _c.Y == j * 20)
+				{
+					AddStaticObject(new Interactable(_rend, ++_id, Vector2(i * 20, j * 20), controllers.at(c.Controller), square, 20, true));
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 public:
 
 	World()
@@ -35,40 +54,33 @@ public:
 
 	}
 
-	World(SDL_Renderer* rend)
+	World(SDL_Renderer* rend, Layout layout)
 	{
+		_layout = layout;
 		_id = 0;
-		_cid = 8;
 		_rend = rend;
 		SDL_RenderClear(_rend);
 		SDL_SetRenderDrawColor(_rend, 0, 0, 0, 255);
-		for (int i = 0; i <= _cid; ++i)
+		for (int i = 0; i <= _layout.Controllers; ++i)
 		{
 			Controller* obj = new Controller(i, _colors[i]);
 			std::reference_wrapper<Controller> cont = *obj;
 			controllers.push_back(cont);
 		}
-		for (int i = 0; i < 40; ++i)
+		for (int i = 0; i < layout.Width / 20; ++i)
 		{
-			for (int j = 0; j < 40; ++j)
+			for (int j = 0; j < layout.Height / 20; ++j)
 			{
-				if ((i * 20) % 100 == 0 && i == j)
-				{
-					AddStaticObject(new Interactable(_rend, ++_id, Vector2(i * 20, j * 20), controllers[i / 5 + 1], square, 20));
-					/*auto x = staticWorldObjects.back().get().GetVertices();
-					std::cout << "At position " << staticWorldObjects.back().get().GetPosition().ToString() << "the vertices are" << x[0].ToString() << x[1].ToString() << x[2].ToString() << x[3].ToString() << std::endl;
-					*/
-				}
-				else
+				if (!IsCore(i,j))
 				{
 					AddStaticObject(new Interactable(_rend, ++_id, Vector2(i * 20, j * 20), controllers.front(), square, 20));
 				}
 			}
 		}
-		for (Controller& obj : controllers)
+
+		for (Core c : _layout.Cores)
 		{
-			if (obj.GetID() != 0)
-			AddDynamicObject(new Interactable(_rend, ++_id, Vector2(obj.GetID() * 100, obj.GetID() * 100), obj, circle, 10));
+			AddDynamicObject(new Interactable(_rend, ++_id, c.Start, controllers.at(c.Controller), circle, 10));
 		}
 	}	
 
@@ -84,11 +96,12 @@ public:
 		dynamicWorldObjects.push_back(obj);
 	}
 
-	void RemoveObject(Interactable &object)
+	void SpawnNewBalls()
 	{
-		std::vector<std::reference_wrapper<Interactable>> :: iterator itr = std::find(dynamicWorldObjects.begin(), dynamicWorldObjects.end(), object);
-		if (itr == dynamicWorldObjects.end()) return;
-		dynamicWorldObjects.erase(itr);
+		for (Core c : _layout.Cores)
+		{
+			AddDynamicObject(new Interactable(_rend, ++_id, c.Start, controllers.at(c.Controller), circle, 10));
+		}
 	}
 
 	void CheckForCollisions(Interactable& obj)
@@ -96,31 +109,62 @@ public:
 		Collision* c = new Collision;
 		for (Interactable& _obj : staticWorldObjects)
 		{
-			if (obj.GetController().GetID() != _obj.GetController().GetID())
+			if (obj.GetController()->GetID() != _obj.GetController()->GetID())
 			{
-				//std::cout << obj.GetPosition().ToString() << " vs " << _obj.GetPosition().ToString() << std::endl;
 				if (obj.Intersects(_obj, c))
 				{
 					_obj.ChangeController(obj.GetController());
 					obj.SolveCollision(*c);
-					c = nullptr;
-					delete c;
-					return;
+					break;
 				}
 			}
 		}
-		for (Interactable& _obj : dynamicWorldObjects)
+		/*for (Interactable& _obj : dynamicWorldObjects)
 		{
-			if (obj != _obj)
+			if (obj != _obj && obj.GetController() == _obj.GetController())
 			{				
 				if (obj.Intersects(_obj, c))
 				{
 					obj.SolveCollision(*c);
-					c = nullptr;
-					delete c;
-					return;
 				}
 			}
+		}*/
+		c = nullptr;
+		delete c;
+	}
+
+	bool ControllerIsOut(Controller& c)
+	{
+		if (c.Lost())
+		{
+			std::vector<std::reference_wrapper<Interactable> > newDynamicWorldObjects;
+			std::vector<Core> newCores;
+			for (Interactable& obj : dynamicWorldObjects)
+			{
+				if (obj.GetController() != &c)
+				{
+					newDynamicWorldObjects.push_back(obj);
+				}
+			}
+			dynamicWorldObjects = newDynamicWorldObjects;
+			for (Core _c : _layout.Cores)
+			{
+				if (_c.Controller != c.GetID())
+				{
+					newCores.push_back(_c);
+				}
+			}
+			_layout.Cores = newCores;
+			return true;
+		}
+		return false;
+	}
+
+	void CheckControllers()
+	{
+		for (Controller& c : controllers)
+		{
+			ControllerIsOut(c);
 		}
 	}
 
@@ -136,12 +180,11 @@ public:
 		}
 		for (Interactable& obj : dynamicWorldObjects)
 		{
-			obj.Step(_rend);
+			obj.Step();
 			CheckForCollisions(obj);
 		}
 		SDL_RenderPresent(_rend);
-		
+		CheckControllers();
 		return fps+1;
 	}
 };
-

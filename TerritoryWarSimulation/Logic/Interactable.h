@@ -13,19 +13,20 @@
 class Interactable
 {
 public:
-	Interactable(SDL_Renderer* rend, int id, Vector2 pos, Controller controller, Form form, float radius)
+	Interactable(SDL_Renderer* rend, int id, Vector2 pos, Controller& controller, Form form, float radius, bool core = false)
 	{
 		_rend = rend;
 		_id = id;
 		_position = pos;
-		_controller = controller;
+		_controller = &controller;
 		_form = form;
 		_radius = radius;
-		_color = _controller.GetColor();
+		_color = _controller->GetColor();
+		_core = core;
 		switch (_form)
 		{
 		case circle:
-			_velocity = Vector2(5, 5);
+			_velocity = Vector2(5 * sin(Vector2(0, 400).Dot(_position)) -0.5, 5 * sin(Vector2(400, 0).Dot(_position)) -0.5);
 			break;
 		case square:
 			_destination = new SDL_Rect();
@@ -44,47 +45,44 @@ public:
 
 	}
 
-	void Step(SDL_Renderer* rend)
+	void Step()
 	{
 		_position += _velocity;
 		// right boundary
-		if (_position.X + 20 >= 800)
+		if (_position.X > 800)
 		{
-			_position.X = 780;
-			_velocity = Vector2(-1 * _velocity.X, _velocity.Y);
+			_position.X = 800;
+			_velocity.Rotate();
 		}
 
 		// left boundary
-		if (_position.X - 20 <= 0)
+		if (_position.X < 0)
 		{
-			_position.X = 20;
-			_velocity = Vector2(-1 * _velocity.X, _velocity.Y);
+			_position.X = 0;
+			_velocity.Rotate();
 		}
 
 		// bottom boundary
-		if (_position.Y + 20 >= 800)
+		if (_position.Y > 800)
 		{
-			_position.Y = 780;
-			_velocity = Vector2(_velocity.X, -1 * _velocity.Y);
+			_position.Y = 800;
+			_velocity.Rotate();
 		}
 
 		// upper boundary
-		if (_position.Y - 20 <= 0)
+		if (_position.Y < 0)
 		{
-			_position.Y = 20;
-			_velocity = Vector2(_velocity.X, -1 * _velocity.Y);
+			_position.Y = 0;
+			_velocity.Rotate();
 		}
-		//std::cout << _id << ": (" << _position.X << "," << _position.Y << ")" << std::endl;
+		
 		Render();
 	}
 
 	void SolveCollision(Collision c)
 	{
-		//std::cout << "(" << _velocity.X << "," << _velocity.Y << ")" << std::endl;
 		_velocity -= c._separation;
 		_velocity.Rotate();
-		//std::cout << "(" << _position.X << "," << _position.Y << ")" << std::endl;
-		//std::cout << "(" << _velocity.X << "," << _velocity.Y << ")" << std::endl;
 	}
 
 	void Render()
@@ -149,17 +147,22 @@ public:
 		return vertices;
 	}
 
-	Controller GetController()
+	Controller* GetController()
 	{
 		return _controller;
 	}
 
-	void ChangeController(Controller _new)
+	void ChangeController(Controller* _new)
 	{
 		if (this->_form == square)
 		{
+			if (this->_core)
+			{
+				this->_controller->LoseACore();
+				this->_core = false;
+			}
 			this->_controller = _new;
-			this->_color = _controller.GetColor();
+			this->_color = _controller->GetColor();
 		}
 	}
 
@@ -170,11 +173,12 @@ public:
 private:
 	int _id;
 	float _radius;
+	bool _core;
 	Vector2 _vertices[4];
 	SDL_Rect* _destination;
 	Vector2 _position;
 	Vector2 _velocity;
-	Controller _controller;
+	Controller* _controller;
 	SDL_Renderer* _rend;
 	Color _color;
 	Form _form;
@@ -186,7 +190,15 @@ private:
 		_destination->h = _radius;
 		_destination->w = _radius;
 
-		SDL_SetRenderDrawColor(_rend, _color.r, _color.g, _color.b, _color.a);
+		if (_core)
+		{
+			SDL_SetRenderDrawColor(_rend, 0.8*_color.r, 0.8*_color.g, 0.8*_color.b, 100);
+		}
+		else
+		{
+			SDL_SetRenderDrawColor(_rend, _color.r, _color.g, _color.b, _color.a);
+		}
+
 		SDL_RenderFillRect(_rend, _destination);
 		SDL_SetRenderDrawColor(_rend, 80, 80, 80, 200);
 		SDL_RenderDrawRect(_rend, _destination);
@@ -332,7 +344,7 @@ private:
 	*/
 	bool _intersectsSquare(Interactable other, Collision* collision) const
 	{
-		const float tr = other._radius/2 + this->_radius;
+		const float tr = other._radius/2.2 + this->_radius;
 		const float d = sqrt(pow(this->_position.X - other._position.X, 2) + pow(this->_position.Y - other._position.Y, 2));
 		if (d > tr) return false;
 		collision = new Collision(d, tr, Vector2(this->_position.X - other._position.X, this->_position.Y - other._position.Y));

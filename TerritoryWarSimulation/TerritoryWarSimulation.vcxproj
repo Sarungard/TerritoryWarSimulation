@@ -160,6 +160,8 @@
     <ClInclude Include="Logic\Controller.h" />
     <ClInclude Include="Logic\Form.h" />
     <ClInclude Include="Logic\Interactable.h" />
+    <ClInclude Include="Logic\Layout.h" />
+    <ClInclude Include="Logic\Core.h" />
     <ClInclude Include="Logic\Vector2.h" />
     <ClInclude Include="Logic\World.h" />
   </ItemGroup>
@@ -170,6 +172,9 @@
     <Library Include="Resources\x64\Lib\SDL2.lib" />
     <Library Include="Resources\x64\Lib\SDL2main.lib" />
     <Library Include="Resources\x64\Lib\SDL2_image.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Map1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

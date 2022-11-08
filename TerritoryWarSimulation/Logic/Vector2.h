@@ -12,6 +12,13 @@ struct Vector2
 		Y = y;
 	}
 
+	inline Vector2(std::string s)
+	{
+		size_t pos = s.find(",");
+		X = std::stof(s.substr(0, pos)) * 20;
+		Y = std::stof(s.erase(0, pos + 1)) * 20;
+	}
+
 	void Rotate()
 	{
 		if (X >= 0)
@@ -106,6 +113,11 @@ struct Vector2
 	inline bool operator == (const Vector2& A)
 	{
 		return this->X == A.X && this->Y == A.Y;
+	}
+
+	inline bool operator != (const Vector2& A)
+	{
+		return this->X != A.X && this->Y != A.Y;
 	}
 
 	inline bool operator > (const Vector2& A)

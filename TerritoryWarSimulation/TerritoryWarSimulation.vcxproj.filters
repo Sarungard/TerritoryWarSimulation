@@ -41,6 +41,12 @@
     <ClInclude Include="Logic\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Logic\Layout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Logic\Core.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Circle.png">
@@ -51,5 +57,10 @@
     <Library Include="Resources\x64\Lib\SDL2.lib" />
     <Library Include="Resources\x64\Lib\SDL2_image.lib" />
     <Library Include="Resources\x64\Lib\SDL2main.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Map1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

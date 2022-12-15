@@ -7,21 +7,24 @@
 
 class Layout
 {
+private:
+
+	int _controllers;
+	float _width;
+	float _height;
+	std::vector<Core> _cores;
+
 public:
-	int Controllers;
-	float Width;
-	float Height;
-	std::vector<Core> Cores;
 
 	Layout()
 	{}
 
 	Layout(int c, float w, float h, std::vector<Core> s = std::vector<Core>())
 	{
-		Controllers = c;
-		Width = w;
-		Height = h;
-		Cores = s;
+		_controllers = c;
+		_width = w;
+		_height = h;
+		_cores = s;
 	}
 
 	Layout(std::string s)
@@ -30,8 +33,8 @@ public:
 		std::string line;
 		std::getline(infile, line);
 		std::istringstream iss(line);
-		iss >> Controllers >> Width >> Height;
-		for(int i = 1; i <= Controllers; ++i)
+		iss >> _controllers >> _width >> _height;
+		for(int i = 1; i <= _controllers; ++i)
 		{
 			std::getline(infile, line);
 			std::istringstream iss(line);
@@ -43,10 +46,28 @@ public:
 			c + Vector2(c3);
 			c + Vector2(c4);
 			c = Vector2(c1) + 10;
-			Cores.push_back(c);
+			_cores.push_back(c);
 		}
 	}
 
-private:
+	int Controllers() const
+	{
+		return _controllers;
+	}
+
+	float Width() const
+	{
+		return _width;
+	}
+
+	float Height() const
+	{
+		return _height;
+	}
+
+	std::vector<Core> Cores() const
+	{
+		return _cores;
+	}
 };
 

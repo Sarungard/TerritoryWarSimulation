@@ -131,7 +131,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>SDL2.lib SDL2main.lib SDL2_image.lib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>SDL2.lib SDL2main.lib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>$(ProjectDir)SDL2_ttf.dll</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -164,17 +165,17 @@
     <ClInclude Include="Logic\Core.h" />
     <ClInclude Include="Logic\Vector2.h" />
     <ClInclude Include="Logic\World.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Circle.png" />
+    <ClInclude Include="Resources\Include\catch.hpp" />
+    <ClInclude Include="Resources\Include\SDL_ttf.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Resources\x64\Lib\SDL2.lib" />
-    <Library Include="Resources\x64\Lib\SDL2main.lib" />
-    <Library Include="Resources\x64\Lib\SDL2_image.lib" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Map1.txt" />
+    <Text Include="Map2.txt" />
+    <Text Include="Map3.txt" />
+    <Text Include="Map4.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

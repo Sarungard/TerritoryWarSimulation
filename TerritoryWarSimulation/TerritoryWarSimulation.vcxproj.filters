@@ -47,20 +47,22 @@
     <ClInclude Include="Logic\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Circle.png">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <ClInclude Include="Resources\Include\SDL_ttf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Include\catch.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Resources\x64\Lib\SDL2.lib" />
-    <Library Include="Resources\x64\Lib\SDL2_image.lib" />
-    <Library Include="Resources\x64\Lib\SDL2main.lib" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Map1.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Map2.txt" />
+    <Text Include="Map3.txt" />
+    <Text Include="Map4.txt" />
   </ItemGroup>
 </Project>

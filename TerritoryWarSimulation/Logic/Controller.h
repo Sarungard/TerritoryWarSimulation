@@ -4,34 +4,45 @@
 
 class Controller
 {
+
 private:
+
 	int _id;
 	int _numberOfCores;
-	bool _isOut;
+	int _numberOfTiles;
 	Color _color;
 
 public:
+
 	Controller()
 	{
 		_id = 0;
+		_numberOfTiles = 0;
 		_color = Color(128, 128, 128, 0);
 	}
 
-	Controller(int id, Color color) : _id(id), _color(color), _numberOfCores(4), _isOut(false) {}
+	Controller(int id, Color color) : _id(id), _color(color), _numberOfCores(4), _numberOfTiles(4) {}
+
+	void GainATile()
+	{
+		_numberOfTiles++;
+	}
+
+	void LoseATile()
+	{
+		_numberOfTiles--;
+	}
 
 	void LoseACore()
 	{
 		_numberOfCores--;
-		if (_numberOfCores <= 0)
-		{
-			_isOut = true;
-		}
-		std::cout << _id << " lost a core, " << _numberOfCores << " remaining" << std::endl;
+		_numberOfTiles--;
+		//std::cout << _id << " lost a core, " << _numberOfCores << " remaining" << std::endl;
 	}
 
-	bool Lost()
+	bool Lost() const
 	{
-		return _isOut;
+		return _numberOfCores <= 0;
 	}
 
 	int GetID() const
@@ -39,9 +50,14 @@ public:
 		return _id;
 	}
 
-	int GetNumberOfCores()
+	int GetNumberOfCores() const
 	{
 		return _numberOfCores;
+	}
+
+	int GetNumberOfTiles() const
+	{
+		return _numberOfTiles;
 	}
 
 	Color GetColor() const
